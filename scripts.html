@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZEXF 腳本庫</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1a0000, #000);
+      color: #fff;
+      font-family: 'Audiowide', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+      padding: 20px 0;
+    }
+
+    h1 {
+      font-size: 6rem;
+      background: repeating-linear-gradient(
+        -45deg,
+        #ff0000,
+        #ff3333 20px,
+        #ff6666 40px,
+        #ff0000 60px
+      );
+      background-size: 1000px 100px;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: waveFlow 5s linear infinite;
+      text-shadow: 0 0 20px #ff0000, 0 0 40px #ff2222, 0 0 80px #ff0000;
+      letter-spacing: 5px;
+      margin-bottom: 20px;
+    }
+
+    @keyframes waveFlow {
+      0% { background-position: 0 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    .description {
+      font-size: 1.3rem;
+      color: #ffb3b3;
+      text-align: center;
+      max-width: 700px;
+      line-height: 1.8;
+      margin-bottom: 40px;
+      text-shadow: 0 0 10px rgba(255, 0, 0, 0.6);
+    }
+
+    .back-btn {
+      padding: 14px 40px;
+      font-size: 1.2rem;
+      color: #ff5555;
+      border: 2px solid #ff5555;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: 0.3s;
+      box-shadow: 0 0 15px #ff2222;
+      margin-bottom: 40px;
+    }
+
+    .back-btn:hover {
+      background: #ff2222;
+      color: #000;
+      box-shadow: 0 0 40px #ff0000, 0 0 80px #ff3333;
+      transform: scale(1.05);
+    }
+
+    .script-container {
+      width: 70%;
+      margin: 0 auto 40px auto;
+      background: rgba(255, 255, 255, 0.05);
+      border: 2px solid #ff2e2e;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(255, 0, 0, 0.5);
+      position: relative;
+      padding: 20px;
+      text-align: left;
+    }
+
+    .script-title {
+      font-size: 1.5em;
+      color: #ff5e5e;
+      margin-bottom: 10px;
+      border-bottom: 1px solid #ff2e2e;
+      padding-bottom: 5px;
+    }
+
+    .code-box {
+      background: rgba(0, 0, 0, 0.7);
+      padding: 15px;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Consolas', monospace;
+      position: relative;
+      overflow-x: auto;
+    }
+
+    button.copy-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #ff2e2e;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    button.copy-btn:hover {
+      background: #ff5e5e;
+      box-shadow: 0 0 10px #ff5e5e;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #888;
+      font-size: 0.9em;
+      text-align: center;
+    }
+
+    /* 背景流光動畫 */
+    .glow {
+      position: absolute;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(255,0,0,0.3), transparent 70%);
+      filter: blur(120px);
+      animation: floatGlow 8s ease-in-out infinite alternate;
+      z-index: -1;
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translate(-50px, 0); opacity: 0.8; }
+      100% { transform: translate(50px, -40px); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glow"></div>
+
+  <h1>ZEXF</h1>
+  <div class="description">
+    歡迎來到 <strong>ZEXF 腳本庫</strong>。<br>
+    我們正在打造一個安全、高效、自由的 Roblox 腳本分享平台。<br>
+    未來將支援即時更新、社群評分。
+  </div>
+
+  <div class="script-container">
+    <div class="script-title">99 Nights in the Forest</div>
+    <div class="code-box" id="codeBox">
+      <pre>
+loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()
+      </pre>
+    </div>
+    <button class="copy-btn" onclick="copyCode()">複製</button>
+  </div>
+</div>
+
+  <div class="script-container">
+    <div class="script-title">Blade ball</div>
+    <div class="code-box" id="codeBox">
+      <pre>
+loadstring(game:HttpGet("https://raw.githubusercontent.com/NodeX-Enc/NodeX/refs/heads/main/Main.lua"))()
+      </pre>
+    </div>
+    <button class="copy-btn" onclick="copyCode()">複製</button>
+  </div>
+
+  <a href="index.html" class="back-btn">← 回首頁</a>
+
+  <footer>© 2025 ZEXF Script</footer>
+
+  <script>
+    function copyCode() {
+      const code = document.querySelector("#codeBox pre").innerText;
+      navigator.clipboard.writeText(code);
+      const btn = document.querySelector(".copy-btn");
+      btn.innerText = "✅ 已複製";
+      setTimeout(() => btn.innerText = "複製", 1500);
+    }
+  </script>
+</body>
+</html>
