@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZEXF 腳本庫</title>
+
+<!-- 引入字體 -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;500&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+<!-- 引入圖示庫 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+/* --- 基礎設定 --- */
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-x: hidden;
+  position: relative;
+  padding-top: 40px;
+}
+
+/* 星空背景 */
+canvas#stars {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+}
+
+/* --- 標題區 --- */
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(3rem, 6vw, 5rem); /* RWD 字體大小 */
+  margin: 0 0 20px;
+  background: repeating-linear-gradient(
+    -45deg, #ffffff, #cccccc 20px, #999999 40px, #ffffff 60px
+  );
+  background-size: 1000px 100px;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: waveFlow 5s linear infinite;
+  text-shadow: 0 0 20px rgba(255,255,255,0.5);
+  letter-spacing: 4px;
+  text-align: center;
+}
+
+@keyframes waveFlow {
+  0% { background-position: 0 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.description {
+  font-size: 1.1rem;
+  color: #ccc;
+  text-align: center;
+  max-width: 800px;
+  line-height: 1.6;
+  margin-bottom: 50px;
+  padding: 0 20px;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* --- 網格佈局系統 (Grid System) --- */
+.grid-wrapper {
+  display: grid;
+  /* 自動適應寬度：最小 450px，最大填滿 */
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  gap: 30px;
+  width: 90%; /* 佔據螢幕寬度 90% */
+  max-width: 1400px; /* 最大不超過 1400px */
+  margin-bottom: 50px;
+}
+
+/* --- 腳本卡片設計 --- */
+.script-container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 25px;
+  position: relative;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.script-container:hover {
+  border-color: #fff;
+  box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+  transform: translateY(-5px);
+}
+
+/* 標題與按鈕列的排版 (Flexbox) */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  padding-bottom: 12px;
+  flex-wrap: wrap; /* 手機上自動換行 */
+  gap: 10px;
+}
+
+.script-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Orbitron', sans-serif;
+}
+.script-title i { color: #ccc; } /* 圖示顏色 */
+
+/* 按鈕群組 */
+.btn-group {
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+button:hover {
+  background: #fff;
+  color: #000;
+}
+
+/* 代碼區塊 */
+.code-box {
+  background: #0a0a0a;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #333;
+  color: #d4d4d4;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.95rem;
+  overflow-x: auto;
+  white-space: pre; /* 保持單行，可橫向滾動 */
+  margin-top: auto; /* 把代碼區塊推到底部 */
+}
+
+/* --- 展開模式 (霸佔整行) --- */
+.script-container.expanded {
+  grid-column: 1 / -1; /* 強制橫跨所有網格 */
+  z-index: 10;
+  background: rgba(20, 20, 20, 0.95);
+  border-color: #fff;
+  box-shadow: 0 0 50px rgba(255,255,255,0.2);
+}
+
+.script-container.expanded .code-box {
+  white-space: pre-wrap; /* 展開時自動換行 */
+  max-height: none;
+}
+
+/* --- 底部導航 --- */
+.nav-area {
+  display: flex; gap: 20px; margin-bottom: 40px; flex-wrap: wrap; justify-content: center;
+}
+
+.back-btn {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.5);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,0,0,0.3);
+}
+
+.back-btn:hover {
+  background: #fff;
+  color: #000;
+  box-shadow: 0 0 20px rgba(255,255,255,0.4);
+}
+
+footer {
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 20px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+}
+
+/* 手機適配 */
+@media (max-width: 600px) {
+  .grid-wrapper { grid-template-columns: 1fr; width: 95%; }
+  .card-header { flex-direction: column; align-items: flex-start; }
+  .btn-group { width: 100%; justify-content: flex-end; }
+}
+</style>
+</head>
+<body>
+
+<canvas id="stars"></canvas>
+
+<h1>ZEXF</h1>
+<div class="description">
+  歡迎來到 <strong>ZEXF 腳本庫</strong><br>
+  打造安全、高效、自由的 Roblox 腳本分享平台。
+</div>
+
+<!-- 網格容器 -->
+<div class="grid-wrapper">
+
+  <!-- 腳本 1 -->
+  <div class="script-container">
+    <div class="card-header">
+      <div class="script-title">
+        <i class="fa-solid fa-tree"></i> 99 Nights in the Forest
+      </div>
+      <div class="btn-group">
+        <button onclick="toggleExpand(this)">
+          <i class="fa-solid fa-expand"></i> 放大
+        </button>
+        <button onclick="copyCode(this)">
+          <i class="fa-regular fa-copy"></i> 複製
+        </button>
+      </div>
+    </div>
+    <div class="code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/H4xScripts/Loader/refs/heads/main/loader.lua", true))()</div>
+  </div>
+
+  <!-- 腳本 2 -->
+  <div class="script-container">
+    <div class="card-header">
+      <div class="script-title">
+        <i class="fa-solid fa-bolt"></i> Blade Ball
+      </div>
+      <div class="btn-group">
+        <button onclick="toggleExpand(this)">
+          <i class="fa-solid fa-expand"></i> 放大
+        </button>
+        <button onclick="copyCode(this)">
+          <i class="fa-regular fa-copy"></i> 複製
+        </button>
+      </div>
+    </div>
+    <div class="code-box">loadstring(game:HttpGet("https://raw.githubusercontent.com/NodeX-Enc/NodeX/refs/heads/main/Main.lua"))()</div>
+  </div>
+
+</div>
+
+<!-- 按鈕區 -->
+<div class="nav-area">
+  <a href="index.html" class="back-btn">
+    <i class="fa-solid fa-house"></i> 回首頁
+  </a>
+</div>
+
+<footer>© 2025 ZEXFALION Script Hub</footer>
+
+<script>
+function copyCode(btn){
+  const container = btn.closest('.script-container');
+  const code = container.querySelector('.code-box').innerText;
+  navigator.clipboard.writeText(code);
+  
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = '<i class="fa-solid fa-check"></i> 已複製';
+  btn.style.background = "#fff";
+  btn.style.color = "#000";
+  
+  setTimeout(() => {
+    btn.innerHTML = originalHTML;
+    btn.style.background = "";
+    btn.style.color = "";
+  }, 1500);
+}
+
+function toggleExpand(btn){
+  const container = btn.closest('.script-container');
+  container.classList.toggle('expanded');
+  
+  const isExpanded = container.classList.contains('expanded');
+  if(isExpanded) {
+    btn.innerHTML = '<i class="fa-solid fa-compress"></i> 縮小';
+  } else {
+    btn.innerHTML = '<i class="fa-solid fa-expand"></i> 放大';
+  }
+}
+
+// 星空動畫 (保持不變)
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
+let stars = [];
+function resizeCanvas(){canvas.width=window.innerWidth;canvas.height=window.innerHeight;}
+window.addEventListener("resize",resizeCanvas);
+resizeCanvas();
+
+function createStars(){
+  stars = [];
+  for(let i=0;i<150;i++){
+    stars.push({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:Math.random()*1.5,
+      alpha:Math.random(),
+      dAlpha:0.005 + Math.random()*0.015
+    });
+  }
+}
+
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const gradient = ctx.createLinearGradient(0,0,0,canvas.height);
+  gradient.addColorStop(0,"#000");
+  gradient.addColorStop(1,"#1a1a1a");
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  for(let s of stars){
+    ctx.beginPath();
+    ctx.arc(s.x,s.y,s.r,0,2*Math.PI);
+    ctx.fillStyle = `rgba(255,255,255,${s.alpha})`;
+    ctx.fill();
+  }
+}
+
+function updateStars(){
+  for(let s of stars){
+    s.alpha+=s.dAlpha;
+    if(s.alpha<=0 || s.alpha>=1) s.dAlpha=-s.dAlpha;
+  }
+}
+
+function animate(){
+  drawStars();
+  updateStars();
+  requestAnimationFrame(animate);
+}
+
+createStars();
+animate();
+</script>
+
+</body>
+</html>

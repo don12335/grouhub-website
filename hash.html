@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grouhub 工具 - Hash 轉換器</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+    body {
+      background: radial-gradient(circle at top, #0f0f1a, #1a1a2e, #0d0d22);
+      font-family: 'Orbitron', sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      background: linear-gradient(270deg, #ffcc33, #ffd700, #fff3b0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px #ffcc33;
+      font-size: 3rem;
+      margin-bottom: 30px;
+    }
+
+    textarea {
+      width: 80%;
+      max-width: 600px;
+      height: 100px;
+      border-radius: 12px;
+      padding: 15px;
+      font-size: 1.1rem;
+      border: 2px solid #ffd700;
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      outline: none;
+    }
+
+    .result {
+      margin-top: 25px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 20px;
+      width: 80%;
+      max-width: 600px;
+      font-size: 1rem;
+      text-align: left;
+      word-break: break-all;
+      border: 1px solid rgba(255, 215, 0, 0.4);
+    }
+
+    .back {
+      margin-top: 40px;
+      text-decoration: none;
+      color: #ffd700;
+      border: 1px solid #ffd700;
+      padding: 10px 20px;
+      border-radius: 10px;
+      transition: 0.3s;
+    }
+
+    .back:hover {
+      background: #ffd700;
+      color: #000;
+      box-shadow: 0 0 30px #ffd700;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔐 Hash 轉換工具</h1>
+
+  <textarea id="inputText" placeholder="請輸入要轉換的文字..."></textarea>
+
+  <div class="result" id="resultBox">
+    <strong>MD5：</strong><span id="md5"></span><br><br>
+    <strong>SHA1：</strong><span id="sha1"></span><br><br>
+    <strong>SHA256：</strong><span id="sha256"></span>
+  </div>
+
+  <a href="index.html" class="back">← 回首頁</a>
+
+  <script>
+    async function hashText(algorithm, text) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(text);
+      const hashBuffer = await crypto.subtle.digest(algorithm, data);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    }
+
+    const input = document.getElementById('inputText');
+    input.addEventListener('input', async () => {
+      const text = input.value;
+      if (!text) {
+        document.getElementById('md5').textContent = '';
+        document.getElementById('sha1').textContent = '';
+        document.getElementById('sha256').textContent = '';
+        return;
+      }
+
+      document.getElementById('md5').textContent = await hashText('MD5', text).catch(() => '不支援 MD5');
+      document.getElementById('sha1').textContent = await hashText('SHA-1', text);
+      document.getElementById('sha256').textContent = await hashText('SHA-256', text);
+    });
+  </script>
+</body>
+</html>

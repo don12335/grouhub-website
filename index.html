@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grouhub - Roblox Script Utility</title>
+  
+  <!-- 引入字體：Orbitron (標題), JetBrains Mono (代碼感), Inter (介面) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #FFD700;       /* 經典金色 */
+      --primary-glow: rgba(255, 215, 0, 0.5);
+      --bg-dark: #050505;
+      --glass: rgba(20, 20, 20, 0.6);
+      --border: rgba(255, 215, 0, 0.3);
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      color: white;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* 背景網格特效 - 增加駭客工具質感 */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      z-index: -1;
+      pointer-events: none;
+    }
+    
+    /* 背景光暈 */
+    body::after {
+      content: "";
+      position: absolute;
+      width: 60vw; height: 60vw;
+      background: radial-gradient(circle, rgba(255, 215, 0, 0.05) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* 主要內容容器 */
+    .container {
+      text-align: center;
+      z-index: 1;
+      padding: 20px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3rem, 8vw, 6rem); /* RWD 字體大小 */
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin: 0;
+      
+      /* 金屬流光文字效果 */
+      background: linear-gradient(135deg, #fff 0%, #FFD700 40%, #B8860B 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+      position: relative;
+    }
+    
+    /* 標題下的裝飾線 */
+    h1::after {
+      content: "v2.0"; /* 假設版本號，增加科技感 */
+      position: absolute;
+      top: 0; right: -40px;
+      font-size: 1rem;
+      color: var(--primary);
+      font-family: 'JetBrains Mono', monospace;
+      opacity: 0.8;
+      -webkit-text-fill-color: var(--primary);
+    }
+
+    .subtitle {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: #ccc;
+      margin-top: 10px;
+      margin-bottom: 60px;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .subtitle::before, .subtitle::after {
+      content: "";
+      display: block;
+      width: 30px; height: 1px;
+      background: var(--primary);
+      opacity: 0.5;
+    }
+
+    /* 按鈕群組 */
+    .btn-group {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap; /* 手機版自動換行 */
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      position: relative;
+      padding: 14px 40px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      text-decoration: none;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: 4px; /* 方形導角更像工具 */
+      backdrop-filter: blur(10px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+      min-width: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* 按鈕懸停特效 */
+    .btn:hover {
+      background: var(--primary);
+      color: #000;
+      border-color: var(--primary);
+      box-shadow: 0 0 30px var(--primary-glow);
+      transform: translateY(-3px);
+    }
+
+    /* 底部作者資訊 */
+    .footer-info {
+      position: absolute;
+      bottom: 40px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .author {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      color: var(--primary);
+      margin-bottom: 8px;
+      opacity: 0.8;
+    }
+
+    .copyright {
+      font-size: 0.8rem;
+      color: #666;
+    }
+
+    /* 手機版調整 */
+    @media (max-width: 600px) {
+      h1::after { display: none; } /* 手機版隱藏版本號以免跑版 */
+      .btn { width: 100%; } /* 按鈕全寬 */
+      .btn-group { flex-direction: column; gap: 15px; width: 80%; margin: 0 auto 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>Grouhub</h1>
+    <div class="subtitle">Roblox Script Utility</div>
+
+    <!-- 主要按鈕區 -->
+    <div class="btn-group">
+      <a href="download.html" class="btn">下載核心</a>
+      <a href="scripts.html" target="_blank" class="btn">腳本資料庫</a>
+    </div>
+
+    <!-- 次要按鈕區 -->
+    <div class="btn-group">
+      <a href="tools.html" target="_blank" class="btn">更多工具</a>
+    </div>
+  </div>
+
+  <div class="footer-info">
+    <div class="author">Developed by Don Team</div>
+    <div class="copyright">© 2025 Grouhub. System Operational.</div>
+  </div>
+
+</body>
+</html>

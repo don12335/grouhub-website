@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grouhub - Features</title>
+  
+  <!-- 引入字體 -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
+  <!-- 引入圖標庫 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #FFD700;       /* 經典金 */
+      --bg-dark: #09090b;       /* 深灰黑 */
+      --card-bg: rgba(255, 255, 255, 0.03);
+      --text-main: #ffffff;
+      --text-muted: #a1a1aa;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      /* 背景網格 */
+      background-image: 
+        linear-gradient(rgba(255, 215, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 215, 0, 0.03) 1px, transparent 1px);
+      background-size: 40px 40px;
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      overflow-x: hidden;
+    }
+
+    /* ----- Header (還原原本的流光動畫) ----- */
+    header {
+      text-align: center;
+      padding: 80px 20px 50px;
+      max-width: 800px;
+    }
+
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin: 0 0 20px;
+      letter-spacing: 1px;
+      
+      /* --- 這裡是原本的流光動畫精髓 --- */
+      background: linear-gradient(270deg, #ffcc33, #ffd700, #fff3b0, #ffcc33);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 4s ease infinite; /* 流動速度 */
+      filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3)); /* 微微發光 */
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ----- Cards 區塊 ----- */
+    .features-grid {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 30px; /* 卡片間距 */
+      padding: 0 20px;
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .card {
+      flex: 1;
+      min-width: 280px;
+      max-width: 320px;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 16px;
+      padding: 40px 30px;
+      text-align: center;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 彈性動畫 */
+      position: relative;
+      backdrop-filter: blur(10px);
+    }
+
+    /* 卡片懸停：還原原本的金色光暈與上浮感 */
+    .card:hover {
+      transform: translateY(-10px); /* 上浮 */
+      border-color: var(--primary);
+      background: rgba(255, 215, 0, 0.05);
+      box-shadow: 0 0 40px rgba(255, 215, 0, 0.3); /* 強烈的金色光暈 */
+    }
+
+    /* 圖示動畫 */
+    .card-icon {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 24px;
+      transition: 0.4s;
+      text-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.1); /* 懸停時圖示放大 */
+      text-shadow: 0 0 25px var(--primary); /* 圖示發光更強 */
+    }
+
+    .card h3 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.3rem;
+      margin: 0 0 16px;
+      color: var(--text-main);
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin: 0;
+    }
+
+    /* ----- Buttons & Developing ----- */
+    .developing {
+      margin: 60px 0 30px;
+      padding: 10px 25px;
+      border: 1px dashed rgba(255, 215, 0, 0.4);
+      border-radius: 50px;
+      color: var(--primary);
+      font-size: 0.9rem;
+      background: rgba(255, 215, 0, 0.05);
+      animation: pulse 2s infinite; /* 呼吸燈效果 */
+    }
+    
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.2); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+    }
+
+    .btn-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+
+    .discord-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 40px;
+      background: var(--primary);
+      color: #000;
+      font-weight: 700;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      transition: 0.3s;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+    }
+
+    .discord-btn:hover {
+      background: #fff;
+      transform: translateY(-3px);
+      box-shadow: 0 0 30px var(--primary);
+    }
+
+    .back-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+    .back-link:hover { color: var(--primary); text-shadow: 0 0 8px var(--primary); }
+
+    footer {
+      margin-top: auto;
+      padding: 30px;
+      color: #444;
+      font-size: 0.8rem;
+    }
+
+    /* 進場動畫：卡片依序滑入 */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUpAnim 0.8s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    }
+    
+    @keyframes fadeUpAnim {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 延遲設定 */
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
+    .delay-4 { animation-delay: 0.4s; }
+
+  </style>
+</head>
+<body>
+
+  <header class="fade-up">
+    <h1>WHY CHOOSE US</h1>
+    <div class="subtitle">
+      Grouhub 專為追求極致體驗的玩家打造。<br>
+      我們重視細節，讓每一位使用者都能享有快樂體驗。
+    </div>
+  </header>
+
+  <div class="features-grid">
+    <!-- 卡片 1 -->
+    <div class="card fade-up delay-1">
+      <div class="card-icon"><i class="fa-solid fa-language"></i></div>
+      <h3>繁體中文支援</h3>
+      <p>
+        拒絕生硬的機翻。我們提供完整的繁體中文介面，讓你在操作時毫無隔閡，直覺流暢。
+      </p>
+    </div>
+
+    <!-- 卡片 2 -->
+    <div class="card fade-up delay-2">
+      <div class="card-icon"><i class="fa-solid fa-bolt"></i></div>
+      <h3>100% 免費核心</h3>
+      <p>
+        強大的功能不代表需要付費。我們承諾核心功能永久免費，讓社群中的每個人都能輕鬆使用。
+      </p>
+    </div>
+
+    <!-- 卡片 3 -->
+    <div class="card fade-up delay-3">
+      <div class="card-icon"><i class="fa-solid fa-gem"></i></div>
+      <h3>尊享高級介面</h3>
+      <p>
+        專業的 UI/UX 設計風格。即使是免費工具，我們也堅持提供如同付費軟體般的頂級視覺體驗。
+      </p>
+    </div>
+  </div>
+
+  <!-- 增加一點點動畫：呼吸燈效果 -->
+  <div class="developing fade-up delay-4">
+    <i class="fa-solid fa-screwdriver-wrench"></i>
+    <span style="margin-left:8px">系統持續進化中，更多強大功能即將推出。</span>
+  </div>
+
+  <div class="btn-area fade-up delay-4">
+    <a href="https://discord.gg/drjvmP7yVV" target="_blank" class="discord-btn">
+      <i class="fa-brands fa-discord"></i> 加入 Discord 社群
+    </a>
+    
+    <a href="index.html" class="back-link">
+      <i class="fa-solid fa-arrow-left"></i> 返回首頁
+    </a>
+  </div>
+
+  <footer>
+    © 2025 Grouhub. All rights reserved.
+  </footer>
+
+</body>
+</html>
